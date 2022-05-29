@@ -7,7 +7,7 @@
 	# 4) VPCRegion: instead of eu-central-1
 	# 5) Locations instead of EU
 	# 6) S3-BUCKET_NAME
-	# The system must be started from an account which has the infrastructure with VPC is deployed.
+	# The system must be started from an account that has the infrastructure with VPC deployed.
 	# --------------------------------------------------------------------------------------------------
     AWSTemplateFormatVersion:
     Description: AWS CloudFormation Template S3_With_CloudFront_Distribution
