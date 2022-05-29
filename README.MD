@@ -1,14 +1,14 @@
-# --------------------------------------------------------------------------------------------------
-# Author: Vladimir Korotetskiy
-# To start the system, you must specify the correct data:
-# 1) name instead of mysite.test.com, test.com
-# 2) ip4 instead of 192.168.0.1/16
-# 3) VPCId: instead of vpc-test1234
-# 4) VPCRegion: instead of eu-central-1
-# 5) Locations instead of EU
-# 6) S3-BUCKET_NAME
-# The system must be started from an account. In which the infrastructure with VPC is deployed
-# --------------------------------------------------------------------------------------------------
+	# --------------------------------------------------------------------------------------------------
+	# Author: Vladimir Korotetskiy
+	# To start the system, you must specify the correct data:
+	# 1) name instead of mysite.test.com, test.com
+	# 2) ip4 instead of 192.168.0.1/16
+	# 3) VPCId: instead of vpc-test1234
+	# 4) VPCRegion: instead of eu-central-1
+	# 5) Locations instead of EU
+	# 6) S3-BUCKET_NAME
+	# The system must be started from an account. In which the infrastructure with VPC is deployed
+	# --------------------------------------------------------------------------------------------------
    AWSTemplateFormatVersion:
    Description: AWS CloudFormation Template S3_With_CloudFront_Distribution
 
