@@ -1,18 +1,18 @@
 # --------------------------------------------------------------------------------------------------
 # Author: Vladimir Korotetskiy
-# Для запуска системы необходимо указать корректные данные:
-# 1)	имя вместо mysite.test.com, test.com
-# 2)	ip4 вместо 192.168.0.1/16
-# 3)	VPCId: вместо vpc-test1234
-# 4)	VPCRegion: вместо eu-central-1
-# 5)	Locations вместо EU
-# 6)	S3-BUCKET_NAME
-# Запуск системы необходимо производить с аккаунта. В котором развернуты инфраструктура с VPC
+# To start the system, you must specify the correct data:
+# 1) name instead of mysite.test.com, test.com
+# 2) ip4 instead of 192.168.0.1/16
+# 3) VPCId: instead of vpc-test1234
+# 4) VPCRegion: instead of eu-central-1
+# 5) Locations instead of EU
+# 6) S3-BUCKET_NAME
+# The system must be started from an account. In which the infrastructure with VPC is deployed
 # --------------------------------------------------------------------------------------------------
    AWSTemplateFormatVersion:
-   Description : AWS CloudFormation Template S3_With_CloudFront_Distribution
+   Description: AWS CloudFormation Template S3_With_CloudFront_Distribution
 
-Parameters:
+    Parameters:
     DomainName:
     Type: String    
     Description: The DNS name of an existing Amazon Route 53 hosted zone
@@ -103,7 +103,7 @@ Parameters:
 			      Action: s3:*
 			      Resource:
 			         arn:aws:s3:::MyExampleBucket/*
-#Allow for CloudFront
+             #Allow for CloudFront
                          Id: PolicyForCloudFrontPrivateContent
                          Statement:
                          - Effect: Allow
@@ -135,15 +135,9 @@ Parameters:
 					    ResourceRecords:
 					    - 'v=spf1 ip4:192.168.0.1/16 -all'
                       
-Outputs:
-  ID CloudFront:
-    Description: The Created ID CloudFront
-    Value: !GetAtt DistributionList.Items[*].id:Idorigin:Origins.Items[0].Id[?origin=='S3-BUCKET_NAME'].id*
-  Export:
-      Name: !Sub $AWS::CloudFront::Distribution-ID CloudFront
-
-# In some templates 
-#   Outputs: 
-#        DistributionId: 
-#            Description: CloudFront Distribution Id
-#            Value:  !Ref  testdistribution 
+          Outputs:
+           ID CloudFront:
+           Description: The Created ID CloudFront
+           Value: !GetAtt DistributionList.Items[*].id:Idorigin:Origins.Items[0].Id[?origin=='S3-BUCKET_NAME'].id*
+         Export:
+         Name: !Sub $AWS::CloudFront::Distribution-ID CloudFront
