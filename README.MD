@@ -9,8 +9,8 @@
 	# 6) S3-BUCKET_NAME
 	# The system must be started from an account. In which the infrastructure with VPC is deployed
 	# --------------------------------------------------------------------------------------------------
-   AWSTemplateFormatVersion:
-   Description: AWS CloudFormation Template S3_With_CloudFront_Distribution
+    AWSTemplateFormatVersion:
+    Description: AWS CloudFormation Template S3_With_CloudFront_Distribution
 
     Parameters:
     DomainName:
