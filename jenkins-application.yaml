@@ -1,0 +1,19 @@
+apiVersion: argoprocd/v1
+kind: Application
+metadata:
+  name: jenkins
+  namespace: default
+spec:
+  source:
+    path: jenkins
+    repoURL: https://github.com/korotetskiy/Case
+    targetNamespace: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  operations:
+  - sync: {}
