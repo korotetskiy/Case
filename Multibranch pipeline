@@ -1,0 +1,42 @@
+//Multibranch pipeline
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Verify commit message') {
+            steps {
+                script {
+                    def commitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
+                    def jiraTicketPattern = ~/[A-Z]+-\d+/
+                    def isValid = commitMessage ==~ jiraTicketPattern
+
+                    if (!isValid || commitMessage.length() > 50) {
+                        error("Commit message '${commitMessage}' doesn't follow the best practices.")
+                    }
+                }
+            }
+        }
+
+        stage('Lint Dockerfile') {
+            steps {
+                sh 'docker run --rm -i hadolint/hadolint < Dockerfile'
+            }
+        }
+    }
+
+    post {
+        failure {
+            script {
+                currentBuild.result = 'ABORTED'
+                error("Pipeline failed. Merging the feature branch into the main branch is blocked.")
+            }
+        }
+    }
+}

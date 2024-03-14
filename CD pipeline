@@ -1,0 +1,52 @@
+//CD pipeline
+
+pipeline {
+    agent any
+    
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'qa'], description: 'Choose environment (dev or qa)')
+        string(name: 'VERSION', description: 'Enter image version or tag')
+        string(name: 'PORT', defaultValue: '8081', description: 'Enter the port for health check')
+    }
+
+    stages {
+        stage('Deploy Image') {
+            steps {
+                script {
+                    echo "Deploying image to ${params.ENVIRONMENT} environment"
+                    sh "docker-compose push"
+                }
+            }
+        }
+  
+        stage('Health Check') {
+            steps {
+                script {
+                    def endpoint = "http://localhost:${params.PORT}"
+                    def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' ${endpoint}", returnStdout: true).trim()
+
+                    if (response == "200") {
+                        echo "Application is healthy"
+                    } else {
+                        error "Application is not healthy. Received HTTP status code: ${response}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+        success {
+            emailext subject: 'Build Success',
+                     body: 'The build has succeeded',
+                     to: 'v.korotetskiy@gmail.com'
+           }
+        failure {
+            emailext subject: 'Build Failed',
+                     body: 'The build has failed',
+                     to: 'v.korotetskiy@gmail.com'
+           }
+        }
+    }
+}
