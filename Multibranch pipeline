@@ -26,7 +26,15 @@ pipeline {
 
         stage('Lint Dockerfile') {
             steps {
-                sh 'docker run --rm -i hadolint/hadolint < Dockerfile'
+                script {
+                    def lintOutput = sh(returnStdout: true, script: 'docker run --rm -i hadolint/hadolint < Dockerfile')
+                    if (lintOutput.trim()) { // Check for non-empty output (linter found issues)
+                        archiveArtifacts artifacts: 'lint-results.txt', fingerprint: true, recorder: 'string'
+                        writeFile file: 'lint-results.txt', text: lintOutput
+                    } else {
+                        echo 'Dockerfile linting passed (no issues found).'
+                    }
+                }
             }
         }
     }
