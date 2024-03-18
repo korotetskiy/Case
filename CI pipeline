@@ -28,18 +28,15 @@ pipeline {
                 script {
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
                 }
+                
             }
         }
         
         stage('Tag Docker Image') {
             steps {
                 script {
-                    
-                    def buildVersion = sh(returnStdout: true, script: 'echo $BUILD_NUMBER').trim()
-                                       
-                    // sh "docker tag my-docker-image my-docker-repo:latest"
-                    sh "docker tag my-docker-image my-docker-repo:$buildVersion"
-                }
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER", "--build-arg WEBHOOK_URL=${env.WEBHOOK_URL}"                    
+               }  
             }
         }
         
@@ -70,6 +67,22 @@ pipeline {
             emailext subject: 'Build Failed',
                      body: 'The build has failed',
                      to: 'v.korotetskiy@gmail.com'
+        }
+
+        always {
+            // Trigger webhook on success or failure
+            steps {
+                script {
+                    def webhookUrl = env.WEBHOOK_URL // Assuming WEBHOOK_URL environment variable is set
+                    if (webhookUrl) {
+                        def buildResult = currentBuild.result
+                        def message = "Build ${buildResult}"
+                        sh "curl -X POST -d '${message}' $webhookUrl"
+                    } else {
+                        echo "WEBHOOK_URL environment variable not set. Skipping webhook notification."
+                    }
+                }
+            }
         }
     }
 }
