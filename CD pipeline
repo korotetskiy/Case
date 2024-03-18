@@ -2,11 +2,13 @@
 
 pipeline {
     agent any
-    
+
     parameters {
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'qa'], description: 'Choose environment (dev or qa)')
-        string(name: 'VERSION', description: 'Enter image version or tag')
-        string(name: 'PORT', defaultValue: '8081', description: 'Enter the port for health check')
+        string(name: 'Source branch', description: 'Enter source branch from GitLab', defaultValue: 'develop', trim: true)
+        choice(name: 'Environment', choices: ['dev', 'qa'], description: 'Choose environment (dev or qa)')
+        choice(name: 'Version', choices: script: 'return getDockerHubTags("vkorotetskiy/lab")', description: 'Choose image version or tag from Docker Hub')
+     // string(name: 'Version', description: 'Enter image version or tag')
+        string(name: 'Port', defaultValue: '8081', description: 'Enter the port for health check')
     }
 
     stages {
