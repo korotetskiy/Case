@@ -56,14 +56,18 @@ pipeline {
     
     post {
         success {
-            
-            emailext subject: 'Build Success',
-                     body: 'The build has succeeded',
-                     to: 'v.korotetskiy@gmail.com'
+            script {
+                // Check if the merge was in the master
+                if (env.BRANCH_NAME == 'master' && currentBuild.result == 'SUCCESS') {
+                    // If yes, we send a notification and perform additional actions
+                    emailext subject: 'Build Success',
+                             body: 'The build has succeeded and was merged into master',
+                             to: 'v.korotetskiy@gmail.com'                   
+                }
+            }
         }
         
         failure {
-            
             emailext subject: 'Build Failed',
                      body: 'The build has failed',
                      to: 'v.korotetskiy@gmail.com'
